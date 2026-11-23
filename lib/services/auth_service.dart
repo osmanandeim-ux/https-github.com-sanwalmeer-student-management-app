@@ -92,4 +92,24 @@ class AuthService {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getInt('user_id');
   }
+  Future<Map<String, Object?>?> getCurrentUser() async {
+  final userId = await getCurrentUserId();
+
+  if (userId == null) return null;
+
+  final users = await _db.getAll(
+    'users',
+    where: 'id = ?',
+    whereArgs: [userId],
+  );
+
+  if (users.isEmpty) return null;
+
+  final user = Map<String, Object?>.from(users.first);
+
+  // Never expose the stored password hash to the UI.
+  user.remove('password_hash');
+
+  return user;
+}
 }

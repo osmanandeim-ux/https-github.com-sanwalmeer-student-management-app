@@ -26,8 +26,67 @@ class StudentManagementApp extends StatelessWidget {
           seedColor: const Color(0xFF3157D5),
           brightness: Brightness.light,
         ),
-        scaffoldBackgroundColor: const Color(0xFFF6F7FB),
+        scaffoldBackgroundColor: const Color(0xFFF5F7FC),
         fontFamily: 'Roboto',
+
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFFF5F7FC),
+          foregroundColor: Color(0xFF172554),
+          elevation: 0,
+          centerTitle: false,
+          titleTextStyle: TextStyle(
+            fontSize: 21,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF172554),
+          ),
+        ),
+
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: const Color(0xFFF7F8FC),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 18,
+            vertical: 17,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(color: Color(0xFFE5E9F2)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(14),
+            borderSide: const BorderSide(
+              color: Color(0xFF3157D5),
+              width: 1.5,
+            ),
+          ),
+        ),
+
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xFF3157D5),
+            foregroundColor: Colors.white,
+            elevation: 0,
+            minimumSize: const Size(double.infinity, 54),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Color(0xFF3157D5),
+          foregroundColor: Colors.white,
+        ),
+
+        navigationBarTheme: NavigationBarThemeData(
+          backgroundColor: Colors.white,
+          indicatorColor: const Color(0xFFE8EDFF),
+          elevation: 0,
+        ),
       ),
       home: const AuthGate(),
     );
@@ -167,148 +226,286 @@ class _LoginScreenState extends State<LoginScreen> {
       errorMessage = error;
     });
 
-    if (error == null) {
-      widget.onAuthenticated();
-    }
+if (error == null) {
+  if (registerMode) {
+    setState(() {
+      registerMode = false;
+      nameController.clear();
+      passwordController.clear();
+      errorMessage = null;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Account created successfully. Please sign in.'),
+      ),
+    );
+  } else {
+    widget.onAuthenticated();
   }
+}
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Card(
-              elevation: 0,
-              color: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Icon(
-                      Icons.school,
-                      size: 60,
-                      color: Color(0xFF3157D5),
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      registerMode
-                          ? 'Create Account'
-                          : 'Welcome Back',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
+      backgroundColor: const Color(0xFFF5F7FC),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 22,
+              vertical: 28,
+            ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Header
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 28),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [
+                          Color(0xFF3157D5),
+                          Color(0xFF172F80),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(24),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      registerMode
-                          ? 'Register to manage your academic records'
-                          : 'Login to your student account',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade600),
-                    ),
-                    const SizedBox(height: 28),
-
-                    if (registerMode) ...[
-                      TextField(
-                        controller: nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Full Name',
-                          prefixIcon: Icon(Icons.person_outline),
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    TextField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email Address',
-                        prefixIcon: Icon(Icons.email_outlined),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-
-                    TextField(
-                      controller: passwordController,
-                      obscureText: hidePassword,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        prefixIcon: const Icon(Icons.lock_outline),
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              hidePassword = !hidePassword;
-                            });
-                          },
-                          icon: Icon(
-                            hidePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.15),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Icon(
+                            Icons.school_rounded,
+                            color: Colors.white,
+                            size: 42,
                           ),
                         ),
-                        border: const OutlineInputBorder(),
-                      ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'Student Management',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 23,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Manage your academic journey',
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.85),
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
 
-                    if (errorMessage != null) ...[
-                      const SizedBox(height: 12),
-                      Text(
-                        errorMessage!,
-                        style: const TextStyle(color: Colors.red),
-                      ),
-                    ],
+                  const SizedBox(height: 26),
 
-                    const SizedBox(height: 22),
+                  // Login / Signup form
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text(
+                          registerMode
+                              ? 'Create your account'
+                              : 'Welcome back!',
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF172554),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          registerMode
+                              ? 'Enter your details to get started.'
+                              : 'Sign in to continue to your dashboard.',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        const SizedBox(height: 28),
 
-                    ElevatedButton(
-                      onPressed: busy ? null : submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF3157D5),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.all(16),
-                      ),
-                      child: busy
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            )
-                          : Text(
-                              registerMode ? 'Create Account' : 'Login',
+                        if (registerMode) ...[
+                          const Text(
+                            'Full Name',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
                             ),
-                    ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextField(
+                            controller: nameController,
+                            textCapitalization: TextCapitalization.words,
+                            decoration: const InputDecoration(
+                              hintText: 'Enter your full name',
+                              prefixIcon: Icon(Icons.person_outline),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
 
-                    const SizedBox(height: 12),
+                        const Text(
+                          'Email Address',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: const InputDecoration(
+                            hintText: 'Enter your email address',
+                            prefixIcon: Icon(Icons.email_outlined),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
 
-                    TextButton(
-                      onPressed: busy
-                          ? null
-                          : () {
-                              setState(() {
-                                registerMode = !registerMode;
-                                errorMessage = null;
-                              });
-                            },
-                      child: Text(
-                        registerMode
-                            ? 'Already have an account? Login'
-                            : 'New student? Create an account',
-                      ),
+                        const Text(
+                          'Password',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        TextField(
+                          controller: passwordController,
+                          obscureText: hidePassword,
+                          decoration: InputDecoration(
+                            hintText: 'Enter your password',
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  hidePassword = !hidePassword;
+                                });
+                              },
+                              icon: Icon(
+                                hidePassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        if (errorMessage != null) ...[
+                          const SizedBox(height: 16),
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFFEEEE),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              errorMessage!,
+                              style: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ],
+
+                        const SizedBox(height: 26),
+
+                        ElevatedButton(
+                          onPressed: busy ? null : submit,
+                          child: busy
+                              ? const SizedBox(
+                                  height: 22,
+                                  width: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : Text(
+                                  registerMode
+                                      ? 'Create Account'
+                                      : 'Sign In',
+                                ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                registerMode
+                                    ? 'Already have an account?'
+                                    : 'New student?',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: busy
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        registerMode = !registerMode;
+                                        errorMessage = null;
+                                      });
+                                    },
+                              child: Text(
+                                registerMode ? 'Sign In' : 'Create Account',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+
+                  const SizedBox(height: 22),
+                  Text(
+                    'Your academic journey, organised.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -496,133 +693,215 @@ class DashboardScreenState extends State<DashboardScreen> {
   await _loadDashboard();
 }
 
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: _loadDashboard,
-      child: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          const Text(
-            'Hello, Student 👋',
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
+
+@override
+Widget build(BuildContext context) {
+  return RefreshIndicator(
+    onRefresh: _loadDashboard,
+    color: const Color(0xFF3157D5),
+    child: ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(20),
+      children: [
+        const Text(
+          'Your Dashboard 👋',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF172554),
+          ),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          'Track your academic progress in one place.',
+          style: TextStyle(color: Colors.grey.shade600),
+        ),
+        const SizedBox(height: 24),
+
+        // Academic overview banner
+        Container(
+          padding: const EdgeInsets.all(22),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              colors: [
+                Color(0xFF3157D5),
+                Color(0xFF6685EE),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            borderRadius: BorderRadius.circular(20),
           ),
-          const SizedBox(height: 6),
-          Text(
-            'Welcome to your academic dashboard.',
-            style: TextStyle(color: Colors.grey.shade600),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            padding: const EdgeInsets.all(22),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [
-                  Color(0xFF3157D5),
-                  Color(0xFF6685EE),
-                ],
+          child: const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                Icons.school_rounded,
+                color: Colors.white,
+                size: 30,
               ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'YOUR ACADEMIC OVERVIEW',
-                  style: TextStyle(
-                    color: Colors.white70,
-                    fontSize: 12,
-                  ),
+              SizedBox(height: 16),
+              Text(
+                'YOUR ACADEMIC OVERVIEW',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
                 ),
-                SizedBox(height: 12),
-                Text(
-                  'Stay organised.\nAchieve more.',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 22),
-          const Text(
-            'Quick Overview',
-            style: TextStyle(
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-          if (loading)
-            const Padding(
-              padding: EdgeInsets.all(30),
-              child: Center(
-                child: CircularProgressIndicator(),
               ),
-            )
-          else ...[
-            Row(
-              children: [
-                Expanded(
-                  child: StatCard(
-                    title: 'Courses',
-                    value: '$totalCourses',
-                    icon: Icons.menu_book,
-                    color: const Color(0xFF3157D5),
-                  ),
+              SizedBox(height: 10),
+              Text(
+                'Stay organised.\nAchieve more.',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: StatCard(
-                    title: 'Attendance',
-                    value: '${attendancePercentage.toStringAsFixed(0)}%',
-                    icon: Icons.fact_check,
-                    color: const Color(0xFF169B72),
-                  ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Keep your courses, attendance and assignments organised.',
+                style: TextStyle(
+                  color: Colors.white70,
+                  fontSize: 13,
                 ),
-              ],
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 26),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              'Quick Overview',
+              style: TextStyle(
+                fontSize: 19,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF172554),
+              ),
             ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: StatCard(
-                    title: 'Assignments',
-                    value: '$totalAssignments',
-                    icon: Icons.assignment,
-                    color: const Color(0xFFE58A28),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: StatCard(
-                    title: 'Pending',
-                    value: '$pendingAssignments',
-                    icon: Icons.pending_actions,
-                    color: const Color(0xFF9B59B6),
-                  ),
-                ),
-              ],
+            Icon(
+              Icons.analytics_outlined,
+              color: Colors.grey.shade600,
             ),
           ],
-          const SizedBox(height: 20),
-          Text(
-            'Pull down to refresh your dashboard.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.grey.shade600,
-              fontSize: 12,
+        ),
+
+        const SizedBox(height: 14),
+
+        if (loading)
+          const Padding(
+            padding: EdgeInsets.all(35),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        else ...[
+          Row(
+            children: [
+              Expanded(
+                child: StatCard(
+                  title: 'Courses',
+                  value: '$totalCourses',
+                  icon: Icons.menu_book_rounded,
+                  color: const Color(0xFF3157D5),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: StatCard(
+                  title: 'Attendance',
+                  value: '${attendancePercentage.toStringAsFixed(0)}%',
+                  icon: Icons.fact_check_rounded,
+                  color: const Color(0xFF169B72),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: StatCard(
+                  title: 'Assignments',
+                  value: '$totalAssignments',
+                  icon: Icons.assignment_rounded,
+                  color: const Color(0xFFE58A28),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: StatCard(
+                  title: 'Pending',
+                  value: '$pendingAssignments',
+                  icon: Icons.pending_actions_rounded,
+                  color: const Color(0xFF9B59B6),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 22),
+
+          // Attendance progress
+          Container(
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: const Color(0xFFE5E9F2)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Attendance Progress',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Color(0xFF172554),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                LinearProgressIndicator(
+                  value: (attendancePercentage / 100).clamp(0.0, 1.0),
+                  minHeight: 9,
+                  borderRadius: BorderRadius.circular(10),
+                  backgroundColor: const Color(0xFFE8EDFF),
+                  color: const Color(0xFF169B72),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  '${attendancePercentage.toStringAsFixed(1)}% attendance recorded',
+                  style: TextStyle(
+                    color: Colors.grey.shade600,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
-      ),
-    );
-  }
+
+        const SizedBox(height: 20),
+        Center(
+          child: Text(
+            'Pull down to refresh your dashboard.',
+            style: TextStyle(
+              color: Colors.grey.shade500,
+              fontSize: 12,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+      ],
+    ),
+  );
+}
+
 }
 
 // --------------------------------------------------
@@ -836,59 +1115,163 @@ Future<Map<String, String>?> showCourseDialog({
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF6F7FB),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: addCourse,
-        icon: const Icon(Icons.add),
-        label: const Text('Add Course'),
-      ),
-      body: loading
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: const Color(0xFFF5F7FC),
+    floatingActionButton: FloatingActionButton.extended(
+      onPressed: addCourse,
+      icon: const Icon(Icons.add_rounded),
+      label: const Text('Add Course'),
+    ),
+    body: RefreshIndicator(
+      onRefresh: loadCourses,
+      color: const Color(0xFF3157D5),
+      child: loading
           ? const Center(child: CircularProgressIndicator())
-          : courses.isEmpty
-              ? const Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
+          : ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
+              children: [
+                const Text(
+                  'My Courses',
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF172554),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  'Manage your enrolled courses.',
+                  style: TextStyle(color: Colors.grey.shade600),
+                ),
+                const SizedBox(height: 22),
+
+                // Course count
+                Container(
+                  padding: const EdgeInsets.all(18),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF3157D5),
+                    borderRadius: BorderRadius.circular(17),
+                  ),
+                  child: Row(
                     children: [
-                      Icon(
-                        Icons.menu_book_outlined,
-                        size: 60,
-                        color: Colors.grey,
+                      const Icon(
+                        Icons.menu_book_rounded,
+                        color: Colors.white,
+                        size: 30,
                       ),
-                      SizedBox(height: 12),
-                      Text('No courses added yet.'),
-                      Text('Tap Add Course to get started.'),
+                      const SizedBox(width: 15),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${courses.length}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const Text(
+                            'Total Courses',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: courses.length,
-                  itemBuilder: (context, index) {
-                    final course = courses[index];
+                ),
 
-                    return Card(
+                const SizedBox(height: 24),
+
+                const Text(
+                  'Course List',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF172554),
+                  ),
+                ),
+                const SizedBox(height: 12),
+
+                if (courses.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(28),
+                    decoration: BoxDecoration(
                       color: Colors.white,
-                      elevation: 0,
+                      borderRadius: BorderRadius.circular(17),
+                      border: Border.all(
+                        color: const Color(0xFFE5E9F2),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.menu_book_outlined,
+                          size: 52,
+                          color: Colors.grey.shade400,
+                        ),
+                        const SizedBox(height: 14),
+                        const Text(
+                          'No courses yet',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF172554),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          'Add your first course to get started.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
+                  ...courses.map((course) {
+                    return Container(
                       margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(0xFFE5E9F2),
+                        ),
+                      ),
                       child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 9,
+                        ),
                         leading: const CircleAvatar(
+                          radius: 23,
                           backgroundColor: Color(0xFFE8EDFF),
                           child: Icon(
-                            Icons.menu_book,
+                            Icons.menu_book_rounded,
                             color: Color(0xFF3157D5),
                           ),
                         ),
                         title: Text(
-                          course['title'].toString(),
+                          course['title']?.toString() ?? '',
                           style: const TextStyle(
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF172554),
                           ),
                         ),
-                        subtitle: Text(
-                          course['course_code'].toString(),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            course['course_code']?.toString() ?? '',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
                         ),
                         trailing: PopupMenuButton<String>(
                           onSelected: (value) {
@@ -901,23 +1284,40 @@ Future<Map<String, String>?> showCourseDialog({
                           itemBuilder: (context) => const [
                             PopupMenuItem(
                               value: 'edit',
-                              child: Text('Edit'),
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit_outlined, size: 19),
+                                  SizedBox(width: 10),
+                                  Text('Edit'),
+                                ],
+                              ),
                             ),
                             PopupMenuItem(
                               value: 'delete',
-                              child: Text('Delete'),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.delete_outline,
+                                    color: Colors.red,
+                                    size: 19,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text('Delete'),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
                     );
-                  },
-                ),
-    );
-  }
+                  }),
+              ],
+            ),
+    ),
+  );
 }
 
-
+}
 // --------------------------------------------------
 // ATTENDANCE
 // --------------------------------------------------
@@ -1155,7 +1555,15 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final presentCount =
+        records.where((r) => r['status'] == 'Present').length;
+    final absentCount =
+        records.where((r) => r['status'] == 'Absent').length;
+    final lateCount =
+        records.where((r) => r['status'] == 'Late').length;
+
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F7FC),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => showAttendanceDialog(),
         icon: const Icon(Icons.add),
@@ -1163,58 +1571,263 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
-          : records.isEmpty
-              ? const Center(
-                  child: Text('No attendance records yet.'),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: records.length,
-                  itemBuilder: (context, index) {
-                    final record = records[index];
-                    final status = record['status'].toString();
+          : RefreshIndicator(
+              onRefresh: loadData,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                children: [
+                  const Text(
+                    'Attendance',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF172554),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Track and manage your class attendance.',
+                    style: TextStyle(
+                      color: Colors.grey.shade600,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 22),
 
-                    return Card(
-                      color: Colors.white,
-                      child: ListTile(
-                        leading: Icon(
-                          Icons.fact_check,
-                          color: status == 'Present'
-                              ? Colors.green
-                              : status == 'Absent'
-                                  ? Colors.red
-                                  : Colors.orange,
+                  // Attendance summary
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF3157D5),
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Attendance Summary',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                        title: Text(
-                          record['course_title'].toString(),
-                        ),
-                        subtitle: Text(
-                          '${record['course_code']} • '
-                          '${record['date']} • $status',
-                        ),
-                        trailing: PopupMenuButton<String>(
-                          onSelected: (value) {
-                            if (value == 'edit') {
-                              showAttendanceDialog(record: record);
-                            } else if (value == 'delete') {
-                              deleteRecord(record['id'] as int);
-                            }
-                          },
-                          itemBuilder: (context) => const [
-                            PopupMenuItem(
-                              value: 'edit',
-                              child: Text('Edit'),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            _attendanceSummaryItem(
+                              'Present',
+                              presentCount,
+                              Colors.greenAccent,
                             ),
-                            PopupMenuItem(
-                              value: 'delete',
-                              child: Text('Delete'),
+                            _attendanceSummaryItem(
+                              'Absent',
+                              absentCount,
+                              Colors.redAccent.shade100,
+                            ),
+                            _attendanceSummaryItem(
+                              'Late',
+                              lateCount,
+                              Colors.orangeAccent,
                             ),
                           ],
                         ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Attendance Records',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF172554),
+                        ),
                       ),
-                    );
-                  },
-                ),
+                      Text(
+                        '${records.length} records',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+
+                  if (records.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(17),
+                        border: Border.all(
+                          color: const Color(0xFFE5E9F2),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.fact_check_outlined,
+                            size: 50,
+                            color: Colors.grey.shade400,
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            'No attendance records yet',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Color(0xFF172554),
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Mark your first attendance to see it here.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    ...records.map((record) {
+                      final status = record['status'].toString();
+
+                      final Color statusColor =
+                          status == 'Present'
+                              ? Colors.green
+                              : status == 'Absent'
+                                  ? Colors.red
+                                  : Colors.orange;
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFFE5E9F2),
+                          ),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 8,
+                          ),
+                          leading: CircleAvatar(
+                            backgroundColor: statusColor.withValues(
+                              alpha: 0.12,
+                            ),
+                            child: Icon(
+                              Icons.fact_check_outlined,
+                              color: statusColor,
+                            ),
+                          ),
+                          title: Text(
+                            record['course_title'].toString(),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF172554),
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 6),
+                            child: Text(
+                              '${record['course_code']} • '
+                              '${record['date']}',
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                              ),
+                            ),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 9,
+                                  vertical: 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: statusColor.withValues(
+                                    alpha: 0.12,
+                                  ),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  status,
+                                  style: TextStyle(
+                                    color: statusColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              PopupMenuButton<String>(
+                                onSelected: (value) {
+                                  if (value == 'edit') {
+                                    showAttendanceDialog(record: record);
+                                  } else if (value == 'delete') {
+                                    deleteRecord(record['id'] as int);
+                                  }
+                                },
+                                itemBuilder: (context) => const [
+                                  PopupMenuItem(
+                                    value: 'edit',
+                                    child: Text('Edit'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'delete',
+                                    child: Text('Delete'),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                ],
+              ),
+            ),
+    );
+  }
+
+  Widget _attendanceSummaryItem(
+    String label,
+    int count,
+    Color color,
+  ) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            count.toString(),
+            style: TextStyle(
+              color: color,
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1381,78 +1994,283 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
+    final pendingCount =
+        _assignments.where((a) => a['status'] == 'Pending').length;
+    final completedCount =
+        _assignments.where((a) => a['status'] == 'Completed').length;
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      backgroundColor: const Color(0xFFF5F7FC),
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showForm(),
-        child: const Icon(Icons.add),
+        icon: const Icon(Icons.add),
+        label: const Text('Add Assignment'),
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : _courses.isEmpty
-              ? const Center(
-                  child: Text('Add a course before creating assignments.'),
-                )
-              : _assignments.isEmpty
-                  ? const Center(
-                      child: Text('No assignments yet. Tap + to add one.'),
-                    )
-                  : ListView(
-                      padding: const EdgeInsets.all(20),
-                      children: [
-                        const SectionHeader(title: 'My Assignments'),
-                        const SizedBox(height: 12),
-                        ..._assignments.map((assignment) {
-                          final status =
-                              assignment['status'] as String;
-                          final dueDate =
-                              assignment['due_date'] as String;
+          : RefreshIndicator(
+              onRefresh: _loadData,
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                children: [
+                  const Text(
+                    'Assignments',
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w800,
+                      color: Color(0xFF172554),
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Organize your coursework and deadlines.',
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                  const SizedBox(height: 22),
 
-                          return Card(
-                            color: Colors.white,
-                            elevation: 0,
-                            child: ListTile(
-                              leading: const Icon(
-                                Icons.assignment_outlined,
-                                color: Color(0xFF3157D5),
-                              ),
-                              title: Text(
-                                assignment['title'] as String,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              subtitle: Text(
-                                '${assignment['course_code']} • Due: $dueDate\n$status',
-                              ),
-                              isThreeLine: true,
-                              trailing: PopupMenuButton<String>(
-                                onSelected: (value) {
-                                  if (value == 'edit') {
-                                    _showForm(assignment: assignment);
-                                  } else if (value == 'delete') {
-                                    _deleteAssignment(assignment);
-                                  }
-                                },
-                                itemBuilder: (_) => const [
-                                  PopupMenuItem(
-                                    value: 'edit',
-                                    child: Text('Edit'),
-                                  ),
-                                  PopupMenuItem(
-                                    value: 'delete',
-                                    child: Text('Delete'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF3157D5),
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: _assignmentSummaryItem(
+                            'Total',
+                            _assignments.length,
+                            Colors.white,
+                          ),
+                        ),
+                        Expanded(
+                          child: _assignmentSummaryItem(
+                            'Pending',
+                            pendingCount,
+                            Colors.orangeAccent,
+                          ),
+                        ),
+                        Expanded(
+                          child: _assignmentSummaryItem(
+                            'Completed',
+                            completedCount,
+                            Colors.greenAccent,
+                          ),
+                        ),
                       ],
                     ),
+                  ),
+                  const SizedBox(height: 25),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'My Assignments',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF172554),
+                        ),
+                      ),
+                      Text(
+                        '${_assignments.length} items',
+                        style: TextStyle(
+                          color: Colors.grey.shade600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 14),
+
+                  if (_courses.isEmpty)
+                    _assignmentEmptyState(
+                      Icons.menu_book_outlined,
+                      'No courses available',
+                      'Add a course first before creating assignments.',
+                    )
+                  else if (_assignments.isEmpty)
+                    _assignmentEmptyState(
+                      Icons.assignment_outlined,
+                      'No assignments yet',
+                      'Add your first assignment to get started.',
+                    )
+                  else
+                    ..._assignments.map((assignment) {
+                      final status =
+                          assignment['status']?.toString() ?? 'Pending';
+                      final dueDate =
+                          assignment['due_date']?.toString() ?? '';
+
+                      final isCompleted = status == 'Completed';
+                      final statusColor =
+                          isCompleted ? Colors.green : Colors.orange;
+
+                      return Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: const Color(0xFFE5E9F2),
+                          ),
+                        ),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15,
+                            vertical: 8,
+                          ),
+                          leading: CircleAvatar(
+                            backgroundColor: const Color(0xFFE8EDFF),
+                            child: Icon(
+                              Icons.assignment_outlined,
+                              color: const Color(0xFF3157D5),
+                            ),
+                          ),
+                          title: Text(
+                            assignment['title']?.toString() ?? '',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: Color(0xFF172554),
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 7),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  assignment['course_code']?.toString() ?? '',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Due: $dueDate',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade600,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(height: 7),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 9,
+                                    vertical: 4,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: statusColor.withValues(alpha: 0.12),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    status,
+                                    style: TextStyle(
+                                      color: statusColor,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          isThreeLine: true,
+                          trailing: PopupMenuButton<String>(
+                            onSelected: (value) {
+                              if (value == 'edit') {
+                                _showForm(assignment: assignment);
+                              } else if (value == 'delete') {
+                                _deleteAssignment(assignment);
+                              }
+                            },
+                            itemBuilder: (_) => const [
+                              PopupMenuItem(
+                                value: 'edit',
+                                child: Text('Edit'),
+                              ),
+                              PopupMenuItem(
+                                value: 'delete',
+                                child: Text('Delete'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }),
+                ],
+              ),
+            ),
     );
   }
+
+  Widget _assignmentSummaryItem(
+    String label,
+    int count,
+    Color color,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          count.toString(),
+          style: TextStyle(
+            color: color,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _assignmentEmptyState(
+    IconData icon,
+    String title,
+    String message,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(28),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(17),
+        border: Border.all(color: const Color(0xFFE5E9F2)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 50, color: Colors.grey.shade400),
+          const SizedBox(height: 12),
+          Text(
+            title,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: Color(0xFF172554),
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.grey.shade600),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
 
 class AssignmentFormDialog extends StatefulWidget {
@@ -1651,7 +2469,7 @@ class _AssignmentFormDialogState extends State<AssignmentFormDialog> {
 // PROFILE AND LOGOUT
 // --------------------------------------------------
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   final Future<void> Function() onLogout;
 
   const ProfileScreen({
@@ -1660,57 +2478,137 @@ class ProfileScreen extends StatelessWidget {
   });
 
   @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final AuthService _authService = AuthService();
+  Map<String, Object?>? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final user = await _authService.getCurrentUser();
+
+    if (!mounted) return;
+
+    setState(() {
+      _user = user;
+      _isLoading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final name = _user?['name']?.toString() ?? 'Student';
+    final email = _user?['email']?.toString() ?? '';
+
     return ListView(
       padding: const EdgeInsets.all(20),
       children: [
-        const SizedBox(height: 20),
-        const CircleAvatar(
-          radius: 48,
-          backgroundColor: Color(0xFFE8EDFF),
-          child: Icon(
-            Icons.person,
-            size: 55,
-            color: Color(0xFF3157D5),
-          ),
-        ),
-        const SizedBox(height: 15),
-        const Center(
-          child: Text(
-            'Student Account',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+        const SizedBox(height: 12),
+        Center(
+          child: CircleAvatar(
+            radius: 46,
+            backgroundColor: const Color(0xFFE8EDFF),
+            child: const Icon(
+              Icons.person_rounded,
+              size: 52,
+              color: Color(0xFF3157D5),
             ),
           ),
         ),
-        const SizedBox(height: 25),
-        const ProfileTile(
-          icon: Icons.school,
-          title: 'Degree',
-          value: 'Computer Science',
+        const SizedBox(height: 16),
+        Center(
+          child: Text(
+            _isLoading ? 'Loading profile...' : name,
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF172554),
+            ),
+          ),
         ),
-        const ProfileTile(
-          icon: Icons.badge,
-          title: 'Student ID',
-          value: 'STU-2026-001',
+        if (!_isLoading && email.isNotEmpty) ...[
+          const SizedBox(height: 6),
+          Center(
+            child: Text(
+              email,
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ),
+        ],
+        const SizedBox(height: 30),
+        const Text(
+          'Account Information',
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF172554),
+          ),
         ),
-        const ProfileTile(
-          icon: Icons.calendar_month,
-          title: 'Semester',
-          value: 'Semester 5',
+        const SizedBox(height: 14),
+        Card(
+          color: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: const BorderSide(color: Color(0xFFE5E9F2)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+                    children: [
+                      _profileInfo(Icons.person_outline, 'Full Name', name),
+                      const Divider(height: 24),
+                      _profileInfo(Icons.email_outlined, 'Email Address',
+                          email.isEmpty ? 'Not available' : email),
+                    ],
+                  ),
+          ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
         ElevatedButton.icon(
           onPressed: () async {
-            await onLogout();
+            await widget.onLogout();
           },
-          icon: const Icon(Icons.logout),
+          icon: const Icon(Icons.logout_rounded),
           label: const Text('Logout'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.red.shade600,
             foregroundColor: Colors.white,
-            padding: const EdgeInsets.all(15),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _profileInfo(IconData icon, String label, String value) {
+    return Row(
+      children: [
+        Icon(icon, color: const Color(0xFF3157D5)),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(label, style: const TextStyle(color: Colors.grey)),
+              const SizedBox(height: 4),
+              Text(
+                value,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF172554),
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -1718,38 +2616,7 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-// --------------------------------------------------
-// PROFILE TILE
-// --------------------------------------------------
 
-class ProfileTile extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String value;
-
-  const ProfileTile({
-    super.key,
-    required this.icon,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 0,
-      child: ListTile(
-        leading: Icon(
-          icon,
-          color: const Color(0xFF3157D5),
-        ),
-        title: Text(title),
-        subtitle: Text(value),
-      ),
-    );
-  }
-}
 
 // --------------------------------------------------
 // SECTION HEADER
